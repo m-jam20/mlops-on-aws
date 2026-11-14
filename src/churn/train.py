@@ -1,5 +1,6 @@
-"""Train a baseline churn model."""
+"""Train a baseline churn model and track the run with MLflow."""
 
+import mlflow
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
@@ -45,10 +46,25 @@ def train(df: pd.DataFrame, C: float = 1.0) -> tuple[Pipeline, dict[str, float]]
     return pipeline, evaluate(pipeline, X_test, y_test)
 
 
-def main() -> None:
-    _, metrics = train(load())
+def main(C: float = 1.0) -> None:
+    mlflow.set_tracking_uri(config.MLFLOW_TRACKING_URI)
+    mlflow.set_experiment(config.MLFLOW_EXPERIMENT)
+
+    df = load()
+    with mlflow.start_run(run_name="logreg-baseline") as run:
+        pipeline, metrics = train(df, C=C)
+        mlflow.log_params({"model": "LogisticRegression", "C": C, "rows": len(df)})
+        mlflow.log_metrics(metrics)
+        mlflow.sklearn.log_model(
+            pipeline,
+            name="model",
+            input_example=df[config.FEATURES].head(3),
+            registered_model_name="churn-model",
+        )
+
     for name, value in metrics.items():
         print(f"{name:>9}: {value:.3f}")
+    print(f"MLflow run: {run.info.run_id}  (view with: make mlflow-ui)")
 
 
 if __name__ == "__main__":

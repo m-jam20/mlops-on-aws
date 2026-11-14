@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Customer churn model, from laptop to autoscaling deployment on AWS"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "mlflow>=3",
     "pandas>=2.2",
     "scikit-learn>=1.5",
 ]

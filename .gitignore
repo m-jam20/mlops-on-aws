@@ -30,3 +30,6 @@ crash.log
 
 # Tools
 .ruff_cache/
+
+# MLflow local store
+mlflow.db

@@ -1,5 +1,6 @@
 """Paths and constants shared across the project."""
 
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -33,3 +34,7 @@ CATEGORICAL_FEATURES = [
 FEATURES = NUMERIC_FEATURES + CATEGORICAL_FEATURES
 
 RANDOM_STATE = 42
+
+# MLflow: local SQLite database by default; override with the env var for a remote server.
+MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", f"sqlite:///{ROOT / 'mlflow.db'}")
+MLFLOW_EXPERIMENT = "churn"
