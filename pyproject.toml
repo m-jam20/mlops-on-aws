@@ -4,9 +4,11 @@ version = "0.1.0"
 description = "Customer churn model, from laptop to autoscaling deployment on AWS"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "fastapi>=0.115",
     "mlflow>=3",
     "pandas>=2.2",
     "scikit-learn>=1.5",
+    "uvicorn>=0.30",
 ]
 
 [dependency-groups]
@@ -14,6 +16,7 @@ dev = [
     "pytest>=8",
     "ruff>=0.7",
     "pre-commit>=4",
+    "httpx2>=2.16.0",
 ]
 
 [build-system]

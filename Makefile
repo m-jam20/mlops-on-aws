@@ -1,4 +1,4 @@
-.PHONY: install lint format test data train mlflow-ui aws-local-up aws-local-down tf-local
+.PHONY: install lint format test data train mlflow-ui aws-local-up aws-local-down tf-local serve
 
 install:  ## Create .venv, install deps and git hooks
 	uv sync
@@ -23,6 +23,9 @@ train:  ## Train the model and log the run to MLflow
 
 mlflow-ui:  ## Open the MLflow UI at http://127.0.0.1:5000
 	uv run mlflow ui --backend-store-uri sqlite:///mlflow.db
+
+serve:  ## Run the API at http://127.0.0.1:8000 (docs at /docs)
+	uv run uvicorn churn.api:app --reload --port 8000
 
 aws-local-up:  ## Start a local fake AWS (Moto) on port 4566
 	docker run -d --rm --name moto -p 4566:5000 motoserver/moto:5.2.5

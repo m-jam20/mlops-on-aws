@@ -6,6 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RAW_CSV = ROOT / "data" / "raw" / "telco_churn.csv"
 
+# Trained pipeline used by the API. Override with the MODEL_PATH env var.
+MODEL_PATH = Path(os.getenv("MODEL_PATH", ROOT / "models" / "model.joblib"))
+
 DATA_URL = (
     "https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/"
     "master/data/Telco-Customer-Churn.csv"
