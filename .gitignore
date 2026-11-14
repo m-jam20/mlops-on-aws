@@ -27,3 +27,6 @@ crash.log
 .vscode/
 .idea/
 .DS_Store
+
+# Tools
+.ruff_cache/
