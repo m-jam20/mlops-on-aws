@@ -1,4 +1,4 @@
-.PHONY: install lint format test data train mlflow-ui
+.PHONY: install lint format test data train mlflow-ui aws-local-up aws-local-down tf-local
 
 install:  ## Create .venv, install deps and git hooks
 	uv sync
@@ -23,3 +23,14 @@ train:  ## Train the model and log the run to MLflow
 
 mlflow-ui:  ## Open the MLflow UI at http://127.0.0.1:5000
 	uv run mlflow ui --backend-store-uri sqlite:///mlflow.db
+
+aws-local-up:  ## Start a local fake AWS (Moto) on port 4566
+	docker run -d --rm --name moto -p 4566:5000 motoserver/moto:5.2.5
+
+aws-local-down:
+	docker stop moto
+
+tf-local:  ## Terraform init + plan + apply against local fake AWS
+	terraform -chdir=infra/local init -input=false
+	terraform -chdir=infra/local plan -out=plan.tfplan
+	terraform -chdir=infra/local apply plan.tfplan
