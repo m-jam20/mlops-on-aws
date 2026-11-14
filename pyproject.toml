@@ -5,7 +5,6 @@ description = "Customer churn model, from laptop to autoscaling deployment on AW
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.115",
-    "mlflow>=3",
     "pandas>=2.2",
     "scikit-learn>=1.5",
     "uvicorn>=0.30",
@@ -17,6 +16,9 @@ dev = [
     "ruff>=0.7",
     "pre-commit>=4",
     "httpx2>=2.16.0",
+]
+train = [
+    "mlflow>=3",
 ]
 
 [build-system]
@@ -35,3 +37,7 @@ select = ["E", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.uv]
+# Installed locally by `uv sync`; the Docker image skips "train" (no mlflow).
+default-groups = ["dev", "train"]

@@ -1,4 +1,4 @@
-.PHONY: install lint format test data train mlflow-ui aws-local-up aws-local-down tf-local serve
+.PHONY: install lint format test data train mlflow-ui aws-local-up aws-local-down tf-local serve docker-build docker-run
 
 install:  ## Create .venv, install deps and git hooks
 	uv sync
@@ -37,3 +37,9 @@ tf-local:  ## Terraform init + plan + apply against local fake AWS
 	terraform -chdir=infra/local init -input=false
 	terraform -chdir=infra/local plan -out=plan.tfplan
 	terraform -chdir=infra/local apply plan.tfplan
+
+docker-build:  ## Build the API image (run `make train` first so models/model.joblib exists)
+	docker build -t churn-api:local .
+
+docker-run:  ## Run the API container at http://127.0.0.1:8000
+	docker run --rm -p 8000:8000 --name churn-api churn-api:local
