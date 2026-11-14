@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# Data and models
+data/
+models/
+mlruns/
+mlartifacts/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+.terraform.lock.hcl.bak
+
+# Secrets
+.env
+*.pem
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
