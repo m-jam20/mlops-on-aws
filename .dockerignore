@@ -1,0 +1,16 @@
+# Keep the build small and never send private or local files into the image.
+.git
+.venv
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+data/
+mlruns/
+mlartifacts/
+mlflow.db
+infra/
+tests/
+docs/
+NOTES.md
+.env

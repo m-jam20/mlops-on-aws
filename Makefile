@@ -1,4 +1,4 @@
-.PHONY: install lint format test data train mlflow-ui
+.PHONY: install lint format test data train mlflow-ui aws-local-up aws-local-down tf-local serve docker-build docker-run
 
 install:  ## Create .venv, install deps and git hooks
 	uv sync
@@ -23,3 +23,23 @@ train:  ## Train the model and log the run to MLflow
 
 mlflow-ui:  ## Open the MLflow UI at http://127.0.0.1:5000
 	uv run mlflow ui --backend-store-uri sqlite:///mlflow.db
+
+serve:  ## Run the API at http://127.0.0.1:8000 (docs at /docs)
+	uv run uvicorn churn.api:app --reload --port 8000
+
+aws-local-up:  ## Start a local fake AWS (Moto) on port 4566
+	docker run -d --rm --name moto -p 4566:5000 motoserver/moto:5.2.5
+
+aws-local-down:
+	docker stop moto
+
+tf-local:  ## Terraform init + plan + apply against local fake AWS
+	terraform -chdir=infra/local init -input=false
+	terraform -chdir=infra/local plan -out=plan.tfplan
+	terraform -chdir=infra/local apply plan.tfplan
+
+docker-build:  ## Build the API image (run `make train` first so models/model.joblib exists)
+	docker build -t churn-api:local .
+
+docker-run:  ## Run the API container at http://127.0.0.1:8000
+	docker run --rm -p 8000:8000 --name churn-api churn-api:local

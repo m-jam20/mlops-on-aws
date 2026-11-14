@@ -1,5 +1,6 @@
 """Train a baseline churn model and track the run with MLflow."""
 
+import joblib
 import mlflow
 import pandas as pd
 from sklearn.compose import ColumnTransformer
@@ -62,9 +63,13 @@ def main(C: float = 1.0) -> None:
             registered_model_name="churn-model",
         )
 
+    config.MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(pipeline, config.MODEL_PATH)
+
     for name, value in metrics.items():
         print(f"{name:>9}: {value:.3f}")
     print(f"MLflow run: {run.info.run_id}  (view with: make mlflow-ui)")
+    print(f"Model saved to {config.MODEL_PATH}")
 
 
 if __name__ == "__main__":
